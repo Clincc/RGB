@@ -1,0 +1,107 @@
+#include <STC15F2K60S2.H>
+#include <intrins.h>
+//#include "config.h"
+
+#define uchar unsigned char 
+#define uint unsigned
+
+#define DO  P10
+//#define RGBMUN 2
+
+//uchar t=1;
+void write_0();
+void write_1();
+void rest();
+void rgb(uchar r,uchar g,uchar b);
+void write_byte(uchar dat);
+void delay80us();
+
+void main()
+{
+   DO=0;
+
+   while(1)
+   {
+      rgb(255,0,0);
+//      rest();
+      rgb(0,0,255);
+      rest();
+   }
+}
+
+void write_0()
+{
+		DO = 1;
+		_nop_();
+    _nop_();
+    _nop_(); 
+    _nop_(); 
+    _nop_(); 
+    _nop_(); 
+    _nop_();  
+		DO = 0;
+}
+
+void write_1()
+{
+		DO = 1;
+		_nop_();
+    _nop_();
+    _nop_();
+    _nop_(); 
+    _nop_(); 
+    _nop_();
+    _nop_();
+    _nop_();
+    _nop_();
+    _nop_(); 
+    _nop_();
+    _nop_();
+    _nop_();
+    _nop_(); 
+    _nop_(); 
+    _nop_();
+    _nop_(); 
+		DO = 0; 
+}
+
+void rest()
+{
+   DO=0;
+   delay80us();  
+}
+
+void write_byte(uchar dat)
+{
+   uchar i=0;
+   for(i=0;i<8;i++)
+   {
+      if(((dat<<i)&0x80))
+         write_1();
+      else 
+         write_0();
+   }
+}
+
+void rgb(uchar r,uchar g,uchar b)   
+{       
+   write_byte(g);         
+   write_byte(r);
+   write_byte(b);             
+}
+
+void delay80us()		//@22.1184MHz
+{
+	unsigned char i, j;
+
+	i = 2;
+	j = 209;
+	do
+	{
+		while (--j);
+	} while (--i);
+}
+
+
+
+
